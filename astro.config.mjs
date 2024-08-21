@@ -5,7 +5,7 @@ import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://github.com/TeaCup404',
+  site: 'https://teacup404.github.io',
   base: 'FlashServer-Docs',
   integrations: [starlight({
     title: 'FlashServer',
