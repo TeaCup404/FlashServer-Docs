@@ -1,0 +1,109 @@
+---
+title: Get to know Models
+---
+
+Here you will learn the concepts of creating the basic models file for FlashServer. <br />
+There are 5 kinds of models you need to make for a front to back CRUD:
+- **Model**: The basic model that represents the data structure of the database.
+- **InModel**: The model that is used to validate the incoming data from the client.
+- **OutModel**: The model that is used to validate the outgoing data to the client.
+- **ProfileModel**: The convertor class that uses automapper to convert the Model to InModel and OutModel.
+- **ModelDM**: The data manager class that uses the basic CRUD function 
+
+## The Models
+### Model
+The model is the basic class that represents the data structure of the database. <br />
+Here is an example of a model class:
+```csharp
+public class Model : BaseEntity
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+}
+```
+
+### InModel
+The InModel is the default class that is used to validate the incoming data from the client. <br />
+Here is an example of a InModel class:
+```csharp
+public class InModel : IIn
+{
+    public string Name { get; set; }
+    public string Description { get; set; }
+}
+```
+
+### OutModel
+The OutModel is the default class that is used to validate the outgoing data to the client. <br />
+Here is an example of a OutModel class:
+```csharp
+public class OutModel : IOut
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+}
+```
+
+### ProfileModel
+The ProfileModel is the convertor class that uses automapper to convert the Model to InModel and OutModel. <br />
+Here is an example of a ProfileModel class:
+```csharp
+public class ProfileModel : Profile
+{
+    public ProfileModel()
+    {
+        CreateMap<Model, InModel>().ReverseMap();
+        CreateMap<Model, OutModel>().ReverseMap();
+    }
+}
+```
+
+### ModelDM
+The ModelDM is the data manager class that uses the basic CRUD function. <br />
+Here is an example of a ModelDM class:
+```csharp
+public partial class ModelDM : BaseTable<Model, Context> {}
+```
+
+## Example
+a basic file for a models file should look like this:
+```csharp
+using FlashServer.Models;
+using AutoMapper;
+
+namespace FlashServer.Models
+{
+    public class Model : BaseEntity
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class InModel : IIn
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class OutModel : IOut
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class ProfileModel : Profile
+    {
+        public ProfileModel()
+        {
+            CreateMap<Model, InModel>().ReverseMap();
+            CreateMap<Model, OutModel>().ReverseMap();
+        }
+    }
+
+    public partial class ModelDM : BaseTable<Model, Context> {}
+}
+```

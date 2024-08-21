@@ -1,0 +1,29 @@
+--- 
+title: Get to know Manipulation Managers
+---
+
+Manipulation Managers are the middle layer between the controllers and the data managers.
+They are used to manipulate the data before it is sent to the data manager or before it is send to the 
+controllers. <br />
+
+
+## Create a Manipulation Manager
+Here you will learn the concepts of creating a manipulation manager for the models. <br />
+there are 2 ways to create a manipulation manager:
+- write it yourself with the help of the library
+- use the FlashServer CLI to create it for you by your models
+
+### Manually Create a Manipulation Manager
+To create a manipulation manager you need to create a class that inherits from the `ManipulationManager` class. <br />
+Here is an example of a manipulation manager class:
+```csharp
+public class ModelMM : ManipulationManager<InModel, OutModel, Model, Context>
+{
+	public static ModelDM _dataManager = new ModelDM();
+    public ModelMM(IDbContextFactory<Context> contextFactory, IMapper mapper) : base(contextFactory, _dataManager, mapper)
+    {}
+}
+```
+
+### Use the FlashServer CLI
+For the CLI you can...

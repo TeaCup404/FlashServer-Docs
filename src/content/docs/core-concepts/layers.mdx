@@ -1,0 +1,109 @@
+---
+title: The Layers
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+In FlashServer you have 3 layers:
+- **Data Layer**
+- **Manipulation Layer**
+- **Presentation Layer**
+
+## Data Layer
+Data Layer is the first layer of the FlashServer library.
+It is used to interact with the database. <br />
+In the Data Layer, you will find the basic CRUD functions and frequently used functions for the models.
+
+The Data Layer has the following components:
+- **Context**: The class that is used to connect to the database.
+- **Models**: The folder that contains all your models.
+
+### Context
+In the Data Layer the you have a wrapper class for the regular DbContext class called BaseContext.
+which helps in automatic date updating for the models.
+<Aside>Only if you are using the library [BaseEntity](#baseentity) class you should use the BaseContext class</Aside>
+
+Here is an example of a Context class:
+```csharp
+public class Context : BaseContext
+{
+    public Context(DbContextOptions<Context> options) : base(options) { }
+
+    public DbSet<Model> Models { get; set; }
+}
+```
+
+### Data Managers
+#### BaseTable
+The BaseTable class is the class that is used to interact with the tables inside the database,
+This class needs to be extended by the developer for more personalized functions but still gives you the basic 
+functions that are common.
+
+Here is an example of a BaseTable class:
+```csharp
+public partial class ModelDM : BaseTable<Model, Context> {}
+```
+
+#### BaseView
+The BaseView class is the class that is used to interact with the views inside the database,
+This class needs to be extended by the developer for more personalized functions but still gives you the basic
+functions that are common.
+
+Here is an example of a BaseView class:
+```csharp
+public partial class ModelDM : BaseView<Model, Context> {}
+```
+
+
+### Interfaces
+The Data Layer has 2 interfaces that are used to validate the incoming and outgoing data from the client.
+- **IIn**: The interface that is used to validate the incoming data from the client.
+- **IOut**: The interface that is used to validate the outgoing data to the client.
+
+<Aside>The best way to implement the interfaces are on the default class</Aside>
+
+Here is an example of a InModel class:
+```csharp
+public class InModel : IIn
+{
+    public string Name { get; set; }
+    public string Description { get; set; }
+}
+```
+
+Here is an example of a OutModel class:
+```csharp
+public class OutModel : IOut
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+}
+```
+
+### BaseEntity
+BaseEntity is a base class for the data models, it's propose is to added `UpdatedDate` and `CreatedDate` to the modals
+for easy tracking
+
+
+## Manipulation Layer
+Manipulation Layer is the middle layer between the controllers and the data managers.
+It is used to manipulate the data before it is sent to the data manager or before it is sent to the controllers. <br />
+Manipulation Managers are wrapping the Data Managers function and manipulating the data between the layers.
+
+### Manipulation Manager
+In the Manipulation Layer, you will find the Manipulation Manager class.
+This class is used to manipulate the data before it is sent to the data manager or before it is sent to the controllers.
+The Manipulation Manager as the basic CRUD functions and frequently used functions for the models, and a manipulation function
+that takes the default data model for the manager or a generic model and return the corresponding data model
+<Aside type="caution">Notice that if you are using a generic model it should be in the corresponding profile as a map</Aside>
+
+## Presentation Layer
+Presentation Layer is the last layer of the FlashServer library.
+It is used to create the endpoints for the API. <br />
+In the Presentation Layer, you will find the CRUD endpoints for the models.
+
+### Basic Controller
+In the Presentation Layer, you will find the Basic Controller class.
+This class is used to create the endpoints for the API. <br />
+The BasicController uses the manipulation manager as a service for getting the data from the database.

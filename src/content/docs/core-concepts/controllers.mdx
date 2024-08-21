@@ -1,0 +1,32 @@
+---
+title: Get to know Basic Controllers
+---
+
+Basic Controllers are the last layer of the FlashServer library. 
+They are used to create the endpoints for the API. <br />
+In the BasicController, you will find the CRUD endpoints for the models.
+
+
+## Create a BasicController
+Here you will learn the concepts of creating a BasicController for the ManipulationManager. <br />
+there are 2 ways to create a BasicController:
+- write it yourself with the help of the library
+- use the FlashServer CLI to create it for you by your models and manipulation managers
+
+### Manually Create a BasicController
+To create a Controller you need to create a class that inherits from the `BasicController` class. <br />
+Here is an example of a Controller class:
+```csharp
+[Route("api/[controller]")]
+[ApiController]
+public class ModelController : BasicController<InModel, OutModel, Model>
+    public ModelController(ModelMM dataManager, ILogger<ModelController> logger) : base(dataManager, logger)
+    { }
+}
+```
+
+### Use the FlashServer CLI
+For the CLI you can... 
+```shell
+flashserver endpoint create <ModelName>
+```

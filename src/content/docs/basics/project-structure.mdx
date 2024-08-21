@@ -1,0 +1,38 @@
+---
+title: Project Structure
+---
+
+import { FileTree } from '@astrojs/starlight/components';
+
+## Files and directories
+- `PL (Presentation Layer)` - The folder that contains all your manipulation managers.
+    - `BasicControllers.cs` - The file that contains all your basic controllers.
+- `ML (Manipulation Layer)` - The folder that contains all your manipulation managers.
+    - `ManipulationManagers.cs` - The file that contains all your manipulation managers.
+- `DL (Data Layer)` - The folder that contains all your data layer files.
+    - `context.cs` - The file that contains the context class.
+    - `DataModels` - The folder that contains all your data models.
+- `appsettings.json` - The file that contains the app settings.
+- `appsettings.Development.json` - The file that contains the development app settings.
+- `Program.cs` - The file that contains the program class.
+- `APINAME.csproj` - The file that contains the project settings.
+
+
+## Project Structure
+<FileTree>
+- Properties
+    - launchSettings.json
+- PL
+    - BasicControllers.cs
+- ML
+    - ManipulationManagers.cs
+- DL ## recommend like this
+    - context.cs
+    - DataModels
+        - Model.cs
+        - ...
+- appsettings.json
+- appsettings.Development.json
+- Program.cs
+- APINAME.csproj
+</FileTree>

@@ -1,0 +1,99 @@
+---
+title: Get to know the managers
+---
+import { Icon } from '@astrojs/starlight/components';
+import ReadMore from '../../../components/readmore.astro';
+
+## Data Managers
+Data Managers are the first layer of the FlashServer library.
+They are used to interact with the database. <br />
+In the Data Manager, you will find the basic CRUD functions and frequently used functions for the models:
+- Get by primary key
+- Get all
+- Create 
+- Update
+- Delete
+
+### Adding a function
+To add a function to the Data Manager you need to create a function in the Data Manager class that extends the `BaseTable` class. <br />
+Here is an example of a function in the Data Manager class:
+```csharp
+public class ModelDM : BaseTable<Model, Context>
+{
+    public async Task<Model> GetByName(string name)
+    {
+        return await _context.Models.FirstOrDefaultAsync(x => x.Name == name);
+    }
+}
+```
+
+### Override the basic functions
+To override the basic functions you need to create a function in the Data Manager class that extends the `BaseTable` class. <br />
+Here is an example of a function in the Data Manager class:
+```csharp
+public class ModelDM : BaseTable<Model, Context>
+{
+    public override Model GetByID(int id)
+    {
+        id = GetSpecialKey(id);
+        return _context.Models.FirstOrDefault(x => x.Id == id);
+    }
+}
+```
+
+
+
+## Manipulation Managers
+Manipulation Managers are the middle layer between the controllers and the data managers.
+They are used to manipulate the data before it is sent to the data manager or before it is sent to the
+controllers. <br />
+Manipulation Managers are wrapping the Data Managers function and manipulating the data between the layers
+
+### Adding a function
+To add a function to the Manipulation Manager you need to create a function in the Manipulation Manager class that extends the `ManipulationManager` class. <br />
+Here is an example of a function in the Manipulation Manager class:
+```csharp
+public class ModelMM : ManipulationManager<InModel, OutModel, Model, Context>
+{
+    public OutModel GetByName(string name)
+    { 
+        using(var context = _contextFactory.CreateDbContext())
+        {
+            Model data = _baseTable.GetByName(ID, context);
+
+            return TransformFromData(data);
+        }
+    }
+}
+```
+
+### Override the basic functions
+To override the basic functions you need to create a function in the Manipulation Manager class that extends the `ManipulationManager` class. <br />
+Here is an example of a function  in the Manipulation Manager class:
+```csharp
+public class ModelMM : ManipulationManager<InModel, OutModel, Model, Context>
+{
+    public override OutModel GetByID(int id)
+    {
+        OutModel outModel = base.GetByID(id);
+        
+        outModel.Name = "Special Name";
+
+        return outModel;
+    }
+}
+```
+
+### Adding new Data Manager
+Adding a new Data Manager to to manipulation manager is easy, you just need to create a new instance of the Data Manager and pass it to the base class. <br />
+Here is an example of a function in the Manipulation Manager class:
+```csharp
+public class ModelMM : ManipulationManager<InModel, OutModel, Model, Context>
+{
+    public static ModelDM _dataManager = new ModelDM();
+    public static NewModelDM _newDataManager = new NewModelDM(); ## New Data Manager
+    public ModelMM(IDbContextFactory<Context> contextFactory, IMapper mapper) : base(contextFactory, _dataManager, mapper)
+    {}
+}
+```
+

@@ -1,0 +1,105 @@
+---
+title: Install and Setup FlashServer
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+import { FileTree } from '@astrojs/starlight/components';
+import { Steps } from '@astrojs/starlight/components';
+import { connectionString, initCode, programCode, ContextCode } from '../../../constants.ts';
+import { Aside } from '@astrojs/starlight/components';
+
+
+The FlashServer is a wrapper for EntityFrame Core you can use to create a [New Project](#create-a-new-api-project). <br />
+Or, migrate an existing Project to FlashServer.
+
+
+## Perquisites
+- **.Net SDK** - `.NET 6.0 SDK` or higher
+- **Text Editor** - I recommend [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) or [VS Code](https://code.visualstudio.com/) with [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
+- **Terminal** - FlashServer is easier to setup and navigate with [FlashServer CLI]()
+
+
+## Installing the CLI
+For the CLI you can... 
+```shell
+dotnet tool install --global FlashServer.CLI
+```
+
+## Quick Start
+### Create a new API Project
+<Tabs>
+    <TabItem label="Visual Studio">
+        - From the **File** menu, select **New > Project**.
+        - Enter *Web API* in the search box.
+        - Select the **ASP.NET Core Web API** template and select Next.
+        - In the **Configure your new project dialog**, name the project *APINAME* and select Next.
+        - In the **Additional information** dialog:
+            - Confirm the **Framework is .NET 6.0+** (Long Term Support).
+            - Confirm the checkbox for **Use controllers(uncheck to use minimal APIs)** is checked.
+            - Select **Create**.
+
+        <h2> Add Nuget Package </h2>
+        - From the Tools menu, select **NuGet Package Manager > Manage NuGet Packages for Solution**.
+        - Select the **Browse** tab.
+        - Enter **FlashServer** in the search box, and then select `FlashServer`
+        - Select the **Project** checkbox in the right pane and then select **Install**.
+    </TabItem>
+
+    <TabItem label="VS Code">
+        <Code code={initCode} lang="shellscript" title ="Terminal" frame="terminal" mark="<APINAME>" />
+    </TabItem>
+</Tabs>
+
+Now your project should look like this
+
+<FileTree>
+- Properties
+    - launchSettings.json
+- Controllers
+    - WeatherForecastController.cs
+- appsettings.json
+- appsettings.Development.json
+- Program.cs
+- WeatherForecast.cs
+- APINAME.csproj
+</FileTree>
+
+<Aside type="tip">
+    before setting up your API delete the `WeatherForecastController.cs` and `WeatherForecast.cs` files!
+</Aside>
+
+---
+
+### Setup the API
+Now that you created a new project or installed the library its time to setup your API.
+
+<Steps>
+1. Add to your appsettings.json a connection string to your SQL server:
+   <Code code={connectionString} lang="json" title ="appsettings.js" frame="file"/>
+
+2. Create a context file for your project
+    <Code code={ContextCode} lang="c#" title="context.cs" frame="file"/>
+
+3. Add the SQL server to your Program.cs and configure the services for the mangers and automapper profiles
+    <Code code={programCode} lang="c#" title="Program.cs" frame="file" />
+
+4. Add your <a href="/core-concepts/models">models</a> to your project
+    <Aside>If your are setting up an existing project just format your files as the needed</Aside>
+
+5. Add your <a href="/core-concepts/manipulation-managers">manipulation managers</a> and <a href="/core-concepts/controllers">controllers</a> to your project
+    either by using the CLI or manually creating them
+    ```shell
+    flashServer Init --folder <Models Folder>
+    ```
+    This will modify the <a href="/guides/project-structure">project directory</a> with all the necessary files for your API project.
+
+7. Run your project
+    ```shell
+    dotnet run
+    ```
+
+8. Open your browser and navigate to `https://localhost:5001/swagger/index.html`
+</Steps>
+
+---
